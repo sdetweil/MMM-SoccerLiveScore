@@ -4,7 +4,8 @@ Module.register("MMM-SoccerLiveScore", {
         leagues: ['1. Liga', 'CL'],
         showNames: true,
         showLogos: true,
-        liveOnly: false
+        liveOnly: false,
+        displayTime: 5000
 
 
     },
@@ -25,30 +26,86 @@ Module.register("MMM-SoccerLiveScore", {
         this.idList = [];
         this.activeId = 0;
         this.sendConfigs(this);
-        this.showStandings(this);
+
+        if (this.config.leagues.length > 1) {
+            this.changeLeague(this, 0);
+        } else {
+            this.setLeague(this);
+        }
     },
 
-    showStandings: function (self) {
-        if (this.standings.length > 0) {
-            this.loadet = true;
-            this.updateDom()
-        } else {
+    setLeague: function (self) {
+
+        if (self.idList.length == 0) {
+
             setTimeout(function () {
-                self.showStandings(self);
-            }, 1000)
+                self.setLeague(self);
+            }, 1000);
+        } else {
+
+            self.activeId = self.idList[0];
+            self.updateDom(1000);
         }
+    },
+
+
+    changeLeague: function (self, count) {
+        if (self.idList.length > 0) {
+        if (count < self.idList.length) {
+
+            self.activeId = self.idList[count];
+            this.updateDom(1000);
+            setTimeout(function () {
+                self.changeLeague(self, count + 1);
+            }, self.config.displayTime);
+        } else {
+
+            self.activeId = this.idList[0];
+            this.updateDom(1000);
+            setTimeout(function () {
+                self.changeLeague(self, 1);
+            }, self.config.displayTime);
+        }
+            } else {
+                setTimeout(function () {
+                self.changeLeague(self, 0);
+            }, 1000);
+            }
+
+
     },
 
     sendConfigs: function (self) {
 
-        self.sendSocketNotification('CONFIG', {leagues: self.config.leagues, showLogos: self.config.showLogos});
+        self.sendSocketNotification('CONFIG', {
+            leagues: self.config.leagues,
+            showLogos: self.config.showLogos
+        });
     },
 
 
     getDom: function () {
-        var wrapper = document.createElement("img");
-        wrapper.id = 'blub';
-        wrapper.src = 'https://www.ta4-images.de/ta/images/teams/4908/64';
+        var wrapper = document.createElement("div");
+
+        if (Object.getOwnPropertyNames(this.standings).length === 0) {
+            wrapper.innerHTML = 'lade...'
+            return wrapper;
+        }
+        wrapper.innerHTML = this.activeId;
+
+        var activeLeagueStandings = this.standings[this.activeId];
+        for (var i = 0; i<activeLeagueStandings.length; i++) {
+            if (activeLeagueStandings[i].matches !== undefined){
+            for (var j = 0; j<activeLeagueStandings[i].matches.length; j++) {
+                console.log(activeLeagueStandings[i].matches[j].team1_name)
+            }
+                }
+        }
+
+        /* var wrapper = document.createElement("img");
+         wrapper.id = 'blub';
+         wrapper.src = 'https://www.ta4-images.de/ta/images/teams/4908/64';
+         console.log('updated');*/
         return wrapper;
     },
 
@@ -66,10 +123,12 @@ Module.register("MMM-SoccerLiveScore", {
         } else if (notification === 'STANDINGS') {
             this.standings[payload.leagueId] = payload.standings;
             console.log(this.standings);
+            this.updateDom();
+
         } else if (notification === 'LEAGUES') {
-            this.idList.push[payload.id];
+            this.idList.push(payload.id);
             this.leagueIds[payload.id] = payload.name;
-            //console.log(this.leagueIds);
+
         }
     }
 });
