@@ -1,3 +1,12 @@
+/* global Module */
+
+/* Magic Mirror
+ * Module: MMM-SoccerLiveScore
+ *
+ * By Luke Scheffler https://github.com/LukeSkywalker92
+ * MIT Licensed.
+ */
+
 Module.register("MMM-SoccerLiveScore", {
 
     defaults: {

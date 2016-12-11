@@ -1,3 +1,12 @@
+/* global Module */
+
+/* Magic Mirror
+ * Module: MMM-SoccerLiveScore
+ *
+ * By Luke Scheffler https://github.com/LukeSkywalker92
+ * MIT Licensed.
+ */
+
 var NodeHelper = require('node_helper');
 var request = require('request');
 
