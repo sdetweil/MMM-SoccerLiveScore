@@ -10,7 +10,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'GET',
-            url: 'https://www.ta4-images.de/ta/images/teams/'+teamId+'/64',
+            url: 'https://www.ta4-images.de/ta/images/teams/' + teamId + '/64',
             headers: {
                 'Host': 'www.ta4-images.de',
                 'Accept': '*/*',
@@ -26,7 +26,10 @@ module.exports = NodeHelper.create({
         request(options, function (error, response, body) {
             if (error) throw new Error(error);
             var image = new Buffer(body).toString('base64');
-            self.sendSocketNotification('LOGO', {teamId: teamId, image: image});
+            self.sendSocketNotification('LOGO', {
+                teamId: teamId,
+                image: image
+            });
 
         });
 
@@ -57,22 +60,25 @@ module.exports = NodeHelper.create({
             var leagueIds = [];
             for (var i = 0; i < leagues.length; i++) {
                 for (var j = 0; j < competitions.length; j++) {
-                    if (competitions[j].name == leagues[i]) {
+                    if (competitions[j].id == leagues[i]) {
+                        if (showLogos) {
+                            if (competitions[j].has_table) {
+                                self.getTeams(competitions[j].id);
+                            } else {
+                                self.getLogosFromScores(competitions[j].id);
+                            }
+                        }
                         leagueIds.push(competitions[j].id)
-                        self.sendSocketNotification('LEAGUES', {name: leagues[i], id: competitions[j].id});
+                        self.sendSocketNotification('LEAGUES', {
+                            name: competitions[j].name,
+                            id: competitions[j].id
+                        });
                     }
                 }
             }
-            console.log(leagueIds);
             for (var i = 0; i < leagueIds.length; i++) {
                 self.getScores(leagueIds[i]);
-                if (showLogos) {
-                    console.log('bla');
-                    self.getTeams(leagueIds[i])
-                }
             }
-
-            //console.log(JSON.parse(body).competitions);
         });
     },
 
@@ -103,17 +109,15 @@ module.exports = NodeHelper.create({
                 }
             }
             self.getLogos(teamIds);
-            console.log(teamIds);
         });
     },
 
     getLogos: function (teamIds) {
         var self = this;
         var logos = [];
-        for (var i = 0; i<teamIds.length; i++) {
+        for (var i = 0; i < teamIds.length; i++) {
             self.getTeamLogo(teamIds[i]);
         }
-        //console.log(logos);
     },
 
     getScores: function (leagueId) {
@@ -139,19 +143,54 @@ module.exports = NodeHelper.create({
             var data = JSON.parse(body);
             var refreshTime = data.refresh_time * 1000;
             var standings = data.data;
-            self.sendSocketNotification('STANDINGS', {leagueId: leagueId, standings: standings});
+            self.sendSocketNotification('STANDINGS', {
+                leagueId: leagueId,
+                standings: standings
+            });
             setTimeout(function () {
                 self.getScores(leagueId);
             }, refreshTime);
         });
     },
 
+    getLogosFromScores: function (leagueId) {
+        var self = this;
+        var options = {
+            method: 'POST',
+            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/matches/round/0',
+            headers: {
+                'Host': 'ta4-data.de',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Connection': 'keep-alive',
+                'Accept': '*/*',
+                'User-Agent': 'TorAlarm/20161202 CFNetwork/808.1.4 Darwin/16.1.0',
+                'Accept-Language': 'de-de',
+                'Accept-Encoding': 'gzip',
+                'Content-Length': '49',
+            },
+            body: '{"lng":"de-DE","device_type":0,"decode":"decode"}',
+            form: false
+        }
+
+        request(options, function (error, response, body) {
+            var data = JSON.parse(body);
+            var standings = data.data;
+            for (var i = 0; i < standings.length; i++) {
+                console.log(standings[i].matches);
+                if (standings[i].matches !== undefined) {
+                    for (var j = 0; j < standings[i].matches.length; j++) {
+                        self.getTeamLogo(standings[i].matches[j].team1_id);
+                        self.getTeamLogo(standings[i].matches[j].team2_id);
+                    }
+                }
+            }
+        });
+    },
+
 
     socketNotificationReceived: function (notification, payload) {
         if (notification === 'CONFIG') {
-            console.log(payload.leagues);
             this.getLeagueIds(payload.leagues, payload.showLogos);
-            //this.getTeamLogo();
         }
     }
 
