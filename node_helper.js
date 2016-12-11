@@ -185,7 +185,6 @@ module.exports = NodeHelper.create({
             var data = JSON.parse(body);
             var standings = data.data;
             for (var i = 0; i < standings.length; i++) {
-                console.log(standings[i].matches);
                 if (standings[i].matches !== undefined) {
                     for (var j = 0; j < standings[i].matches.length; j++) {
                         self.getTeamLogo(standings[i].matches[j].team1_id);
