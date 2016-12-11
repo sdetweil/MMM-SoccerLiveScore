@@ -4,7 +4,7 @@ This a module for the [MagicMirror](https://github.com/MichMich/MagicMirror). It
 
 ## Preview
 
-
+![](https://github.com/LukeSkywalker92/MMM-SoccerLiveScore/blob/master/preview.png)
 
 ## Installation
 1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/LukeSkywalker92/MMM-SoccerLiveScore.git`.
