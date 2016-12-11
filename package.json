@@ -1,7 +1,7 @@
 {
   "name": "mmm-soccerlivescore",
   "version": "1.0.0",
-  "description": "",
+  "description": "MagicMirror-Module for displaying live soccer scores.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/LukeSkywalker92/MMM-SoccerLiveScore/issues"
   },
-  "homepage": "https://github.com/LukeSkywalker92/MMM-SoccerLiveScore#readme"
+  "homepage": "https://github.com/LukeSkywalker92/MMM-SoccerLiveScore#readme",
+  "keywords": [
+    "soccer"
+  ]
 }
