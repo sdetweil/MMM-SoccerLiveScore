@@ -96,10 +96,9 @@ Module.register("MMM-SoccerLiveScore", {
 
         var matches = document.createElement('table');
         matches.className = 'xsmall';
-        var title = document.createElement('caption');
+        var title = document.createElement('header');
         title.innerHTML = this.leagueIds[this.activeId];
-        title.className = 'small';
-        matches.appendChild(title);
+        wrapper.appendChild(title);
 
 
         var activeLeagueStandings = this.standings[this.activeId];
