@@ -54,9 +54,7 @@ Here is an example of an entry in `config.js`
     <tr>
         <td align="center">Euro League</td>
         <td align="center">2</td>
-    </tr>
-    
-    
+    </tr>  
     <tr>
         <th colspan="2">Germany</th>
     </tr>
@@ -80,8 +78,6 @@ Here is an example of an entry in `config.js`
         <td align="center">DFB-Team</td>
         <td align="center">0</td>
     </tr>
-    
-    
     <tr>
         <th colspan="2">England</th>
     </tr>
@@ -101,8 +97,6 @@ Here is an example of an entry in `config.js`
         <td align="center">3 Lions</td>
         <td align="center">4</td>
     </tr>
-    
-    
     <tr>
         <th colspan="2">Spain</th>
     </tr>
@@ -114,8 +108,6 @@ Here is an example of an entry in `config.js`
         <td align="center">Segunda Division</td>
         <td align="center">54</td>
     </tr>
-    
-    
     <tr>
         <th colspan="2">Italy</th>
     </tr>
@@ -127,8 +119,6 @@ Here is an example of an entry in `config.js`
         <td align="center">Serie B</td>
         <td align="center">53</td>
     </tr>
-    
-    
     <tr>
         <th colspan="2">France</th>
     </tr>
@@ -140,8 +130,6 @@ Here is an example of an entry in `config.js`
         <td align="center">Ligue 2</td>
         <td align="center">182</td>
     </tr>
-    
-    
      <tr>
         <th colspan="2">Portugal</th>
     </tr>
@@ -153,8 +141,6 @@ Here is an example of an entry in `config.js`
         <td align="center">Segunda Liga</td>
         <td align="center">239</td>
     </tr>
-    
-    
      <tr>
         <th colspan="2">Austria</th>
     </tr>
@@ -170,9 +156,6 @@ Here is an example of an entry in `config.js`
         <td align="center">ÖFB Cup</td>
         <td align="center">445</td>
     </tr>
-    
-    
-    
     <tr>
         <th colspan="2">Switzerland</th>
     </tr>
@@ -188,9 +171,6 @@ Here is an example of an entry in `config.js`
         <td align="center">Schweitzer Cup</td>
         <td align="center">399</td>
     </tr>
-    
-    
-    
     <tr>
         <th colspan="2">Turkey</th>
     </tr>
@@ -202,8 +182,6 @@ Here is an example of an entry in `config.js`
         <td align="center">1. Lig</td>
         <td align="center">98</td>
     </tr>
-    
-    
     <tr>
         <th colspan="2">Netherlands</th>
     </tr>
@@ -214,8 +192,7 @@ Here is an example of an entry in `config.js`
     <tr>
         <td align="center">Eerste Divisie</td>
         <td align="center">131</td>
-    </tr>
-    
+    </tr>  
 </table>
 
 
