@@ -10,10 +10,11 @@
 Module.register("MMM-SoccerLiveScore", {
 
     defaults: {
-        leagues: [35],
+        leagues: [35, 1, 9],
         showNames: true,
         showLogos: true,
-        displayTime: 30 * 1000
+        displayTime: 60 * 1000,
+        showTables: false
     },
 
     getScripts: function () {
@@ -21,7 +22,7 @@ Module.register("MMM-SoccerLiveScore", {
     },
 
     getStyles: function () {
-        return ["MMM-SoccerLiveScore.css"]
+        return ["font-awesome.css", "MMM-SoccerLiveScore.css"]
     },
 
     start: function () {
@@ -75,8 +76,6 @@ Module.register("MMM-SoccerLiveScore", {
                 self.changeLeague(self, 0);
             }, 1000);
         }
-
-
     },
 
     sendConfigs: function (self) {
@@ -87,7 +86,6 @@ Module.register("MMM-SoccerLiveScore", {
         });
     },
 
-
     getDom: function () {
         var self = this;
         var wrapper = document.createElement("div");
@@ -96,12 +94,48 @@ Module.register("MMM-SoccerLiveScore", {
             wrapper.innerHTML = '';
             return wrapper;
         }
-        if (this.tableActive && this.tables[this.activeId] != undefined) {
+        if (this.tableActive && this.tables[this.activeId] != undefined && this.config.showTables) {
             var places = document.createElement('table');
             places.className = 'xsmall';
             var title = document.createElement('header');
             title.innerHTML = this.leagueIds[this.activeId];
             wrapper.appendChild(title);
+
+            var labelRow = document.createElement("tr");
+
+            var position = document.createElement("th");
+            labelRow.appendChild(position);
+
+            var logo = document.createElement("th");
+            labelRow.appendChild(logo);
+
+            var name = document.createElement("th");
+            name.innerHTML = 'TEAM';
+            name.setAttribute('align', 'left');
+            labelRow.appendChild(name);
+
+            var gamesLabel = document.createElement("th");
+            var gamesLogo = document.createElement("i");
+            gamesLogo.classList.add("fa", "fa-hashtag");
+            gamesLabel.setAttribute('width', '30px');
+            gamesLabel.appendChild(gamesLogo);
+            labelRow.appendChild(gamesLabel);
+
+            var goalsLabel = document.createElement("th");
+            var goalslogo = document.createElement("i");
+            goalslogo.classList.add("fa", "fa-soccer-ball-o");
+            goalsLabel.appendChild(goalslogo);
+            goalsLabel.setAttribute('width', '30px');
+            labelRow.appendChild(goalsLabel);
+
+            var pointsLabel = document.createElement("th");
+            var pointslogo = document.createElement("i");
+            pointslogo.classList.add("fa", "fa-line-chart");
+            pointsLabel.setAttribute('width', '30px');
+            pointsLabel.appendChild(pointslogo);
+            labelRow.appendChild(pointsLabel);
+
+            places.appendChild(labelRow);
 
             var table = this.tables[this.activeId];
 
@@ -109,7 +143,7 @@ Module.register("MMM-SoccerLiveScore", {
                 var place = document.createElement('tr');
 
                 var number = document.createElement('td');
-                number.innerHTML = i+1;
+                number.innerHTML = i + 1;
                 place.appendChild(number);
 
                 if (this.config.showLogos) {
@@ -142,22 +176,16 @@ Module.register("MMM-SoccerLiveScore", {
                 points.innerHTML = table[i].points;
                 place.appendChild(points);
 
-                console.log(table[i].team_id)
-
-                places.appendChild(place)
+                places.appendChild(place):
 
             }
 
             wrapper.appendChild(places);
 
-
-
-
-
             this.tableActive = false;
             setTimeout(function () {
                 self.updateDom(1000);
-            }, 5 * 1000);
+            }, this.config.displayTime / 4);
             return wrapper;
         } else {
             var matches = document.createElement('table');
@@ -165,7 +193,6 @@ Module.register("MMM-SoccerLiveScore", {
             var title = document.createElement('header');
             title.innerHTML = this.leagueIds[this.activeId];
             wrapper.appendChild(title);
-
 
             var activeLeagueStandings = this.standings[this.activeId];
             for (var i = 0; i < activeLeagueStandings.length; i++) {
@@ -238,20 +265,15 @@ Module.register("MMM-SoccerLiveScore", {
                             team2_name.innerHTML = activeLeagueStandings[i].matches[j].team2_name;
                             match.appendChild(team2_name);
                         }
-
                         matches.appendChild(match);
-
                     }
                 }
             }
-            console.log(this.activeId);
-            console.log(this.tables[this.activeId] != undefined);
-            if (this.tables[this.activeId] != undefined) {
+            if (this.tables[this.activeId] != undefined && this.config.showTables) {
                 this.tableActive = true;
                 setTimeout(function () {
                     self.updateDom(1000);
-                }, 5 * 1000);
-
+                }, this.config.displayTime / 4);
             }
             wrapper.appendChild(matches);
             return wrapper;
@@ -263,13 +285,14 @@ Module.register("MMM-SoccerLiveScore", {
             this.logos[payload.teamId] = payload.image;
         } else if (notification === 'STANDINGS') {
             this.standings[payload.leagueId] = payload.standings;
-            //this.updateDom();
+            if (!this.config.showTables) {
+                this.updateDom();
+            }
         } else if (notification === 'LEAGUES') {
             this.idList.push(payload.id);
             this.leagueIds[payload.id] = payload.name;
         } else if (notification === 'TABLE') {
             this.tables[payload.leagueId] = payload.table;
-            console.log(payload);
         }
     }
 });

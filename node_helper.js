@@ -231,7 +231,6 @@ module.exports = NodeHelper.create({
         });
     },
 
-
     socketNotificationReceived: function (notification, payload) {
         if (notification === 'CONFIG') {
             this.getLeagueIds(payload.leagues, payload.showLogos);
