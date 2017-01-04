@@ -13,8 +13,8 @@ Module.register("MMM-SoccerLiveScore", {
         leagues: [35, 1, 9],
         showNames: true,
         showLogos: true,
-        displayTime: 60 * 1000,
-        showTables: false
+        displayTime: 20 * 1000,
+        showTables: true
     },
 
     getScripts: function () {
@@ -176,7 +176,7 @@ Module.register("MMM-SoccerLiveScore", {
                 points.innerHTML = table[i].points;
                 place.appendChild(points);
 
-                places.appendChild(place):
+                places.appendChild(place);
 
             }
 
