@@ -73,6 +73,7 @@ module.exports = NodeHelper.create({
                         if (showLogos) {
                             if (competitions[j].has_table) {
                                 self.getTeams(competitions[j].id);
+                                self.getTable(competitions[j].id);
                             } else {
                                 self.getLogosFromScores(competitions[j].id);
                             }
@@ -118,6 +119,37 @@ module.exports = NodeHelper.create({
                 }
             }
             self.getLogos(teamIds);
+        });
+    },
+
+    getTable: function (leagueId) {
+        var self = this;
+        var options = {
+            method: 'POST',
+            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/table',
+            headers: {
+                'Host': 'ta4-data.de',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Connection': 'keep-alive',
+                'Accept': '*/*',
+                'User-Agent': 'TorAlarm/20161202 CFNetwork/808.1.4 Darwin/16.1.0',
+                'Accept-Language': 'de-de',
+                'Accept-Encoding': 'gzip',
+                'Content-Length': '49',
+            },
+            body: '{"lng":"de-DE","device_type":0,"decode":"decode"}',
+            form: false
+        };
+        request(options, function (error, response, body) {
+            var teamIds = [];
+            var data = JSON.parse(body);
+            console.log(data);
+            /*for (var i = 0; i < data.data.length; i++) {
+                for (var j = 0; j < data.data[i].table.length; j++) {
+                    teamIds.push(data.data[i].table[j].team_id);
+                }
+            }
+            self.getLogos(teamIds);*/
         });
     },
 
