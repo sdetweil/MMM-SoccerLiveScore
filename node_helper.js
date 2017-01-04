@@ -143,13 +143,17 @@ module.exports = NodeHelper.create({
         request(options, function (error, response, body) {
             var teamIds = [];
             var data = JSON.parse(body);
-            console.log(data);
-            /*for (var i = 0; i < data.data.length; i++) {
-                for (var j = 0; j < data.data[i].table.length; j++) {
-                    teamIds.push(data.data[i].table[j].team_id);
-                }
+            var refreshTime = data.refresh_time*1000;
+            data = data.data;
+            if (data.length == 1) {
+                self.sendSocketNotification('TABLE', {
+                    leagueId: leagueId,
+                    table: data[0].table
+                });
+                setTimeout(function () {
+                    self.getTable(leagueId);
+                }, refreshTime);
             }
-            self.getLogos(teamIds);*/
         });
     },
 

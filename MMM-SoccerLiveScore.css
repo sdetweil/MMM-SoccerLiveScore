@@ -7,6 +7,13 @@ tr {
     text-align: center;
 }
 
+.MMM-SoccerLiveScore-team_logo {
+    margin-right: 10px;
+    margin-left: 10px;
+    position: relative;
+    top: 3px;
+}
+
 .MMM-SoccerLiveScore-team1_logo {
     margin-left: 10px;
     position: relative;
