@@ -4,7 +4,7 @@ This a module for the [MagicMirror](https://github.com/MichMich/MagicMirror). It
 
 ## Preview
 
-![](https://github.com/LukeSkywalker92/MMM-SoccerLiveScore/blob/master/preview.png)
+![](https://github.com/LukeSkywalker92/MMM-SoccerLiveScore/blob/master/preview.png?raw=true)
 
 ## Installation
 1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/LukeSkywalker92/MMM-SoccerLiveScore.git`.
@@ -19,7 +19,7 @@ The entry in `config.js` can include the following options:
 |`showNames`|Toggles if team-names are shown. <br><br>**Default value:** `true`|
 |`showLogos`|Toggles if team-logos are shown.<br><br>**Default value:** `true`|
 |`displayTime`|Defines how long one league is shown, if you have more than one League in the `leagues`-value.<br><br>**Default value:** 60 • 1000 // 1 minute|
-
+|`showTables`|Toggles if tables are shown if the league has a table. <br><br>**Default value:** `true`|
 
 
 
@@ -33,7 +33,8 @@ Here is an example of an entry in `config.js`
 		leagues: [35, 1, 9],
         showNames: true,
         showLogos: true,
-        displayTime: 60 * 1000
+        displayTime: 60 * 1000,
+        showTables: true
 	}
 },
 ```
