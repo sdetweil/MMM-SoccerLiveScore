@@ -171,11 +171,11 @@ Here is an example of an entry in `config.js`
         <td align="center">215</td>
     </tr>
     <tr>
-        <td align="center">Challange League</td>
+        <td align="center">Challenge League</td>
         <td align="center">216</td>
     </tr>
     <tr>
-        <td align="center">Schweitzer Cup</td>
+        <td align="center">Schweizer Cup</td>
         <td align="center">399</td>
     </tr>
     <tr>
