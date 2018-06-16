@@ -49,7 +49,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions',
+            url: 'https://www.ta4-data.de/em4/data/competitions',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -96,7 +96,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/table',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/table',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -114,6 +114,7 @@ module.exports = NodeHelper.create({
             var teamIds = [];
             var data = JSON.parse(body);
             for (var i = 0; i < data.data.length; i++) {
+	    if (data.data[i].type !== 'table') { continue; }
                 for (var j = 0; j < data.data[i].table.length; j++) {
                     teamIds.push(data.data[i].table[j].team_id);
                 }
@@ -126,7 +127,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/table',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/table',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -145,15 +146,18 @@ module.exports = NodeHelper.create({
             var data = JSON.parse(body);
             var refreshTime = data.refresh_time*1000;
             data = data.data;
-            if (data.length == 1) {
-                self.sendSocketNotification('TABLE', {
-                    leagueId: leagueId,
-                    table: data[0].table
-                });
-                setTimeout(function () {
-                    self.getTable(leagueId);
-                }, refreshTime);
-            }
+	    for(var i = 0; i < data.length; i++) {
+		    if (data[i].type === 'table') {
+			self.sendSocketNotification('TABLE', {
+			    leagueId: leagueId,
+			    table: data[i].table
+			});
+			setTimeout(function () {
+			    self.getTable(leagueId);
+			}, refreshTime);
+		        return;
+		    }
+	    }
         });
     },
 
@@ -169,7 +173,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/matches/round/0',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/matches/round/0',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -202,7 +206,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/matches/round/0',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/matches/round/0',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',

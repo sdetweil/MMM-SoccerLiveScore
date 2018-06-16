@@ -4,7 +4,13 @@ This a module for the [MagicMirror](https://github.com/MichMich/MagicMirror). It
 
 ## Preview
 
-![](https://github.com/LukeSkywalker92/MMM-SoccerLiveScore/blob/master/preview.png)
+### Scores
+
+![](https://github.com/LukeSkywalker92/MMM-SoccerLiveScore/blob/master/preview.png?raw=true)
+
+### Table
+
+![](https://github.com/LukeSkywalker92/MMM-SoccerLiveScore/blob/master/table.png?raw=true)
 
 ## Installation
 1. Navigate into your MagicMirror's `modules` folder and execute `git clone https://github.com/LukeSkywalker92/MMM-SoccerLiveScore.git`.
@@ -19,23 +25,23 @@ The entry in `config.js` can include the following options:
 |`showNames`|Toggles if team-names are shown. <br><br>**Default value:** `true`|
 |`showLogos`|Toggles if team-logos are shown.<br><br>**Default value:** `true`|
 |`displayTime`|Defines how long one league is shown, if you have more than one League in the `leagues`-value.<br><br>**Default value:** 60 • 1000 // 1 minute|
-
+|`showTables`|Toggles if tables are shown if the league has a table. <br><br>**Default value:** `true`|
 
 
 
 Here is an example of an entry in `config.js`
 ```
-{
-	module: 'MMM-SoccerLiveScore',
-	position: 'top_left',
-	header: 'Live-Scores',
-	config: {
-		leagues: [35, 1, 9],
-        showNames: true,
-        showLogos: true,
-        displayTime: 60 * 1000
-	}
-},
+        {
+            module: "MMM-SoccerLiveScore",
+            position: "bottom_left",
+            config: {
+                leagues: [4000],
+                    showNames: true,
+                    showLogos: true,
+                    displayTime: 60 * 1000,
+                    showTables: false,
+                }
+        },
 ```
 
 ## Leagues
@@ -43,6 +49,13 @@ Here is an example of an entry in `config.js`
     <tr>
         <th>League</th>
         <th>ID</th>
+    </tr>
+    <tr>
+        <th colspan="2">FIFA</th>
+    </tr>
+    <tr>
+        <td align="center">Fifa World Cup 2018</td>
+        <td align="center">4000</td>
     </tr>
     <tr>
         <th colspan="2">Europe</th>
@@ -164,11 +177,11 @@ Here is an example of an entry in `config.js`
         <td align="center">215</td>
     </tr>
     <tr>
-        <td align="center">Challange League</td>
+        <td align="center">Challenge League</td>
         <td align="center">216</td>
     </tr>
     <tr>
-        <td align="center">Schweitzer Cup</td>
+        <td align="center">Schweizer Cup</td>
         <td align="center">399</td>
     </tr>
     <tr>
