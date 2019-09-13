@@ -49,7 +49,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions',
+            url: 'https://www.ta4-data.de/em4/data/competitions',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -96,7 +96,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/table',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/table',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -127,7 +127,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/table',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/table',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -173,7 +173,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/matches/round/0',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/matches/round/0',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -206,7 +206,7 @@ module.exports = NodeHelper.create({
         var self = this;
         var options = {
             method: 'POST',
-            url: 'https://www.ta4-data.de/ta/data/competitions/' + leagueId.toString() + '/matches/round/0',
+            url: 'https://www.ta4-data.de/em4/data/competitions/' + leagueId.toString() + '/matches/round/0',
             headers: {
                 'Host': 'ta4-data.de',
                 'Content-Type': 'application/x-www-form-urlencoded',
