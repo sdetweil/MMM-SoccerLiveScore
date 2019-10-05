@@ -31,17 +31,18 @@ The entry in `config.js` can include the following options:
 
 Here is an example of an entry in `config.js`
 ```
-        {
-            module: "MMM-SoccerLiveScore",
-            position: "bottom_left",
-            config: {
-                leagues: [4000],
-                    showNames: true,
-                    showLogos: true,
-                    displayTime: 60 * 1000,
-                    showTables: false,
-                }
-        },
+{
+	module: 'MMM-SoccerLiveScore',
+	position: 'top_left',
+	header: 'Live-Scores',
+	config: {
+		leagues: [35, 1, 9],
+        showNames: true,
+        showLogos: true,
+        displayTime: 60 * 1000,
+        showTables: true
+	}
+},
 ```
 
 ## Leagues
@@ -49,13 +50,6 @@ Here is an example of an entry in `config.js`
     <tr>
         <th>League</th>
         <th>ID</th>
-    </tr>
-    <tr>
-        <th colspan="2">FIFA</th>
-    </tr>
-    <tr>
-        <td align="center">Fifa World Cup 2018</td>
-        <td align="center">4000</td>
     </tr>
     <tr>
         <th colspan="2">Europe</th>
