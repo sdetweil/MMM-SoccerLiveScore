@@ -14,7 +14,8 @@ Module.register("MMM-SoccerLiveScore", {
         showNames: true,
         showLogos: true,
         displayTime: 20 * 1000,
-        showTables: true
+        showTables: true,
+        debug: false,
     },
 
     getScripts: function () {
@@ -81,6 +82,7 @@ Module.register("MMM-SoccerLiveScore", {
     sendConfigs: function (self) {
 
         self.sendSocketNotification('CONFIG', {
+            config:self.config,
             leagues: self.config.leagues,
             showLogos: self.config.showLogos
         });

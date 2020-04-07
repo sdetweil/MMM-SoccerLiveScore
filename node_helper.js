@@ -11,6 +11,8 @@ var NodeHelper = require('node_helper');
 var request = require('request');
 
 module.exports = NodeHelper.create({
+    recoveryTimer: 5* 60 *1000,
+
     start: function () {
         console.log('MMM-SoccerLiveScore helper started...')
     },
@@ -33,13 +35,15 @@ module.exports = NodeHelper.create({
 
 
         request(options, function (error, response, body) {
-            if (error) throw new Error(error);
-            var image = new Buffer(body).toString('base64');
-            self.sendSocketNotification('LOGO', {
-                teamId: teamId,
-                image: image
-            });
-
+            if(self.config.debug)
+                console.log("getTeamLogo error="+error+" response="+response.statusCode)
+            if(response.statusCode === 200){
+                var image = new Buffer(body).toString('base64');
+                self.sendSocketNotification('LOGO', {
+                    teamId: teamId,
+                    image: image
+                });
+            }
         });
 
 
@@ -65,29 +69,33 @@ module.exports = NodeHelper.create({
         };
 
         request(options, function (error, response, body) {
-            var competitions = JSON.parse(body).competitions;
-            var leagueIds = [];
-            for (var i = 0; i < leagues.length; i++) {
-                for (var j = 0; j < competitions.length; j++) {
-                    if (competitions[j].id == leagues[i]) {
-                        if (showLogos) {
-                            if (competitions[j].has_table) {
-                                self.getTeams(competitions[j].id);
-                                self.getTable(competitions[j].id);
-                            } else {
-                                self.getLogosFromScores(competitions[j].id);
+            if(self.config.debug)
+                console.log("getLeagueIds error="+error+" response="+response.statusCode)            
+             if(response.statusCode === 200){
+                var competitions = JSON.parse(body).competitions;
+                var leagueIds = [];
+                for (var i = 0; i < leagues.length; i++) {
+                    for (var j = 0; j < competitions.length; j++) {
+                        if (competitions[j].id == leagues[i]) {
+                            if (showLogos) {
+                                if (competitions[j].has_table) {
+                                    self.getTeams(competitions[j].id);
+                                    self.getTable(competitions[j].id);
+                                } else {
+                                    self.getLogosFromScores(competitions[j].id);
+                                }
                             }
+                            leagueIds.push(competitions[j].id)
+                            self.sendSocketNotification('LEAGUES', {
+                                name: competitions[j].name,
+                                id: competitions[j].id
+                            });
                         }
-                        leagueIds.push(competitions[j].id)
-                        self.sendSocketNotification('LEAGUES', {
-                            name: competitions[j].name,
-                            id: competitions[j].id
-                        });
                     }
                 }
-            }
-            for (var i = 0; i < leagueIds.length; i++) {
-                self.getScores(leagueIds[i]);
+                for (var i = 0; i < leagueIds.length; i++) {
+                    self.getScores(leagueIds[i]);
+                }
             }
         });
     },
@@ -111,15 +119,19 @@ module.exports = NodeHelper.create({
             form: false
         };
         request(options, function (error, response, body) {
-            var teamIds = [];
-            var data = JSON.parse(body);
-            for (var i = 0; i < data.data.length; i++) {
-	    if (data.data[i].type !== 'table') { continue; }
-                for (var j = 0; j < data.data[i].table.length; j++) {
-                    teamIds.push(data.data[i].table[j].team_id);
+            if(self.config.debug)
+                console.log(" getTeams error="+error+" response="+response.statusCode)              
+             if(response.statusCode === 200){
+                var teamIds = [];
+                var data = JSON.parse(body);
+                for (var i = 0; i < data.data.length; i++) {    	        
+                if (data.data[i].type !== 'table') { continue; }
+                    for (var j = 0; j < data.data[i].table.length; j++) {
+                        teamIds.push(data.data[i].table[j].team_id);
+                    }
                 }
+                self.getLogos(teamIds);
             }
-            self.getLogos(teamIds);
         });
     },
 
@@ -142,22 +154,31 @@ module.exports = NodeHelper.create({
             form: false
         };
         request(options, function (error, response, body) {
-            var teamIds = [];
-            var data = JSON.parse(body);
-            var refreshTime = data.refresh_time*1000;
-            data = data.data;
-	    for(var i = 0; i < data.length; i++) {
-		    if (data[i].type === 'table') {
-			self.sendSocketNotification('TABLE', {
-			    leagueId: leagueId,
-			    table: data[i].table
-			});
-			setTimeout(function () {
-			    self.getTable(leagueId);
-			}, refreshTime);
-		        return;
-		    }
-	    }
+            if(self.config.debug)
+                console.log("getTable error="+error+" response="+response.statusCode)              
+             if(response.statusCode === 200){
+                var teamIds = [];
+                var data = JSON.parse(body);
+                var refreshTime = data.refresh_time*1000;
+                data = data.data;
+        	    for(var i = 0; i < data.length; i++) {
+        		    if (data[i].type === 'table') {
+        			self.sendSocketNotification('TABLE', {
+        			    leagueId: leagueId,
+        			    table: data[i].table
+        			});
+        			setTimeout(function () {
+        			    self.getTable(leagueId);
+        			}, refreshTime);
+        		        return;
+        		    }
+        	    }
+            }
+            else{
+                setTimeout(function () {
+                    self.getTable(leagueId);
+                }, this.recoveryTimer);                    
+            }
         });
     },
 
@@ -189,16 +210,25 @@ module.exports = NodeHelper.create({
         }
 
         request(options, function (error, response, body) {
-            var data = JSON.parse(body);
-            var refreshTime = data.refresh_time * 1000;
-            var standings = data.data;
-            self.sendSocketNotification('STANDINGS', {
-                leagueId: leagueId,
-                standings: standings
-            });
-            setTimeout(function () {
-                self.getScores(leagueId);
-            }, refreshTime);
+            if(self.config.debug)
+                console.log("getScores error="+error+" response="+response.statusCode)             
+            if(response.statusCode === 200){
+                var data = JSON.parse(body);
+                var refreshTime = data.refresh_time * 1000;
+                var standings = data.data;
+                self.sendSocketNotification('STANDINGS', {
+                    leagueId: leagueId,
+                    standings: standings
+                });
+                setTimeout(function () {
+                    self.getScores(leagueId);
+                }, refreshTime);
+             }
+             else{
+                setTimeout(function () {
+                    self.getScores(leagueId);
+                }, self.recoveryTimer);
+             }
         });
     },
 
@@ -222,21 +252,26 @@ module.exports = NodeHelper.create({
         }
 
         request(options, function (error, response, body) {
-            var data = JSON.parse(body);
-            var standings = data.data;
-            for (var i = 0; i < standings.length; i++) {
-                if (standings[i].matches !== undefined) {
-                    for (var j = 0; j < standings[i].matches.length; j++) {
-                        self.getTeamLogo(standings[i].matches[j].team1_id);
-                        self.getTeamLogo(standings[i].matches[j].team2_id);
+            if(self.config.debug)
+                console.log("getLogosFromScores error="+error+" response="+response.statusCode)             
+             if(response.statusCode === 200){
+                var data = JSON.parse(body);
+                var standings = data.data;
+                for (var i = 0; i < standings.length; i++) {
+                    if (standings[i].matches !== undefined) {
+                        for (var j = 0; j < standings[i].matches.length; j++) {
+                            self.getTeamLogo(standings[i].matches[j].team1_id);
+                            self.getTeamLogo(standings[i].matches[j].team2_id);
+                        }
                     }
                 }
-            }
+            }   
         });
     },
 
     socketNotificationReceived: function (notification, payload) {
         if (notification === 'CONFIG') {
+            this.config=payload.config
             this.getLeagueIds(payload.leagues, payload.showLogos);
         }
     }
